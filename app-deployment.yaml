@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: app
+        image: nikitka22/myapp:2.0.0
+        env:
+        - name: DB_HOST
+          value: "db" 
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "root"
+        - name: DB_NAME
+          value: "mydatabase"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: myapp
